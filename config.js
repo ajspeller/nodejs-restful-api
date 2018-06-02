@@ -3,11 +3,13 @@
 // container for the environments
 var environments = {
     staging: {
-        port: 3000,
+        httpPort: 3000,
+        httpsPort: 3001,
         envName: 'staging'
     },
     production: {
-        port: 5000,
+        httpPort: 5000,
+        httpsPort: 5001,
         envName: 'production'
     }
 };

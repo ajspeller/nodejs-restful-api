@@ -1,11 +1,38 @@
 // dependencies
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const StringDecode = require('string_decoder').StringDecoder;
 const config = require('./config');
+const fs = require('fs');
 
-// server responds to all request
-var server = http.createServer(function (req, res) {
+// instantiate the HTTP server
+var httpServer = http.createServer(function (req, res) {
+    unifiedServer(req, res);
+});
+
+// instantiate the HTTPS server
+httpsServerOptons = {
+    key: fs.readFileSync('./https/key.pem'),
+    cert: fs.readFileSync('./https/cert.pem')
+};
+var httpsServer = https.createServer(httpsServerOptons, function (req, res) {
+    unifiedServer(req, res);
+});
+
+// start the HTTPS server
+httpServer.listen(config.httpPort, function () {
+    console.log(`The server is listening on port ${config.httpPort} in ${config.envName} mode...`);
+});
+
+// start the HTTPS server
+httpsServer.listen(config.httpsPort, function () {
+    console.log(`The server is listening on port ${config.httpsPort} in ${config.envName} mode...`);
+});
+
+
+// all the server logic for both the http and https server
+var unifiedServer = function (req, res) {
     // get the url and parse it
     var parsedUrl = url.parse(req.url, true);
     // get the path
@@ -65,12 +92,7 @@ var server = http.createServer(function (req, res) {
         });
     });
 
-});
-
-
-server.listen(config.port, function () {
-    console.log(`The server is listening on port ${config.port} in ${config.envName} mode...`);
-});
+};
 
 // define the handlers
 var handlers = {
